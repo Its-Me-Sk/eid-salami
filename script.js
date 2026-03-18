@@ -188,11 +188,7 @@ function checkAnswer(qNum,chosen,isCorrect){
       }
     } else {
       showScreen('screen-wrong');
-      document.getElementById('retry-btn').onclick=()=>{
-        btns.forEach(b=>{ b.removeAttribute('disabled'); b.classList.remove('is-correct','is-wrong'); });
-        if(fb) fb.className='fb hidden';
-        goToQuestion(qNum);
-      };
+      setTimeout(()=>tryVideo('consolation-video'), 400);
     }
   },1600);
 }

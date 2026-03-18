@@ -225,6 +225,12 @@ body { cursor: none; }
   color: #1a0500;
   box-shadow: var(--shadow-gold);
 }
+.pill-red {
+  background: linear-gradient(135deg, #7f1d1d, #ef4444);
+  border-color: rgba(239,68,68,0.4);
+  color: #ffe4e4;
+  box-shadow: 0 0 20px rgba(239,68,68,0.35);
+}
 
 /* ── STAR DECO ── */
 .star-deco {
@@ -456,19 +462,6 @@ body { cursor: none; }
 
 /* ── WRONG CARD ── */
 .wrong-card { gap:16px; }
-.wrong-burst {
-  width:72px; height:72px;
-  background:rgba(239,68,68,0.15);
-  border:2px solid rgba(239,68,68,0.4);
-  border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size:2rem; color:#fca5a5;
-  box-shadow:0 0 30px rgba(239,68,68,0.3);
-  animation:popIn 0.4s cubic-bezier(.18,.89,.32,1.28);
-}
-@keyframes popIn {
-  0%{transform:scale(0);opacity:0;} 100%{transform:scale(1);opacity:1;}
-}
 .wrong-title { color:#fca5a5; font-size:1.4rem; }
 
 /* ── CHEAT CARD ── */
