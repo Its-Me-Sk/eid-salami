@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Eid Salami 🌙</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Scheherazade+New:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- ░░ BACKGROUND LAYERS ░░ -->
+  <div class="bg-stars" id="bgStars"></div>
+  <canvas class="bg-canvas" id="bgCanvas"></canvas>
+  <div class="bg-geo"></div>
+  <div class="bg-mosque"></div>
+  <div class="aurora"></div>
+
+  <!-- ░░ CHEAT SCREEN ░░ -->
+  <div id="cheat-screen" class="screen hidden">
+    <div class="card cheat-card">
+      <div class="cheat-eye">👁️</div>
+      <h2 class="cinzel cheat-title">Caught You! 😈</h2>
+      <p class="cheat-sub">ভেবেছিলে পার পাবে?</p>
+      <div class="vid-frame">
+        <video id="cheat-video" playsinline>
+          <source src="videos/cheat.mp4" type="video/mp4"/>
+        </video>
+        <div class="vid-ph" id="ph-cheat">
+          <span class="ph-icon">😈</span>
+          <span class="ph-text">cheat.mp4 goes here</span>
+          <span class="ph-hint">"If u think ur bad, I am ur dad"</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ░░ SCREEN: INTRO ░░ -->
+  <div id="screen-intro" class="screen active">
+    <div class="card intro-card">
+      <div class="pill-badge">🌙 ঈদ মোবারক 🌙</div>
+      <h1 class="cinzel main-title">Eid Salami<br/><span class="title-sub">Challenge</span></h1>
+      <p class="body-text">আমার ছোটদের জন্য একটা ছোট পরীক্ষা...<br/>সব প্রশ্নের সঠিক উত্তর দিলেই পাবে সালামি 💸</p>
+      <div class="vid-frame">
+        <video id="intro-video" playsinline>
+          <source src="videos/intro.mp4" type="video/mp4"/>
+        </video>
+        <div class="vid-ph" id="ph-intro">
+          <span class="ph-icon">🎥</span>
+          <span class="ph-text">intro.mp4 goes here</span>
+          <span class="ph-hint">Your welcome message</span>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="goToQuestion(1)">
+        <span>আমি প্রস্তুত</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ░░ Q1 ░░ -->
+  <div id="screen-q1" class="screen hidden">
+    <div class="card q-card">
+      <div class="q-meta">
+        <span class="q-num">০১</span>
+        <div class="q-track">
+          <div class="q-track-fill" style="width:25%"></div>
+        </div>
+        <span class="q-of">/ ০৪</span>
+      </div>
+      <div class="star-deco">✦ ✧ ✦</div>
+      <h2 class="cinzel q-text">আমি কি সিঙ্গেল?</h2>
+      <div class="opts">
+        <button class="opt" data-q="1" data-val="হ্যাঁ" data-correct="true" onclick="checkAnswer(1,'হ্যাঁ',true)">
+          <span class="opt-icon">💚</span><span class="opt-label">হ্যাঁ</span>
+        </button>
+        <button class="opt" data-q="1" data-val="না" data-correct="false" onclick="checkAnswer(1,'না',false)">
+          <span class="opt-icon">❤️</span><span class="opt-label">না</span>
+        </button>
+      </div>
+      <div class="fb hidden" id="fb-q1"></div>
+    </div>
+  </div>
+
+  <!-- ░░ Q2 ░░ -->
+  <div id="screen-q2" class="screen hidden">
+    <div class="card q-card">
+      <div class="q-meta">
+        <span class="q-num">০২</span>
+        <div class="q-track"><div class="q-track-fill" style="width:50%"></div></div>
+        <span class="q-of">/ ০৪</span>
+      </div>
+      <div class="star-deco">✧ ✦ ✧</div>
+      <h2 class="cinzel q-text">আমার কি কোনো এক্স আছে?</h2>
+      <div class="opts">
+        <button class="opt" onclick="checkAnswer(2,'হ্যাঁ',true)">
+          <span class="opt-icon">💔</span><span class="opt-label">হ্যাঁ</span>
+        </button>
+        <button class="opt" onclick="checkAnswer(2,'না',false)">
+          <span class="opt-icon">🙅</span><span class="opt-label">না</span>
+        </button>
+      </div>
+      <div class="fb hidden" id="fb-q2"></div>
+    </div>
+  </div>
+
+  <!-- ░░ Q3 ░░ -->
+  <div id="screen-q3" class="screen hidden">
+    <div class="card q-card">
+      <div class="q-meta">
+        <span class="q-num">০৩</span>
+        <div class="q-track"><div class="q-track-fill" style="width:75%"></div></div>
+        <span class="q-of">/ ০৪</span>
+      </div>
+      <div class="star-deco">✦ ✧ ✦</div>
+      <h2 class="cinzel q-text">আমি কি নিজেকে নিয়ে গর্বিত?</h2>
+      <div class="opts">
+        <button class="opt" onclick="checkAnswer(3,'হ্যাঁ',false)">
+          <span class="opt-icon">😎</span><span class="opt-label">হ্যাঁ</span>
+        </button>
+        <button class="opt" onclick="checkAnswer(3,'না',true)">
+          <span class="opt-icon">🥺</span><span class="opt-label">না</span>
+        </button>
+      </div>
+      <div class="fb hidden" id="fb-q3"></div>
+    </div>
+  </div>
+
+  <!-- ░░ Q4 ░░ -->
+  <div id="screen-q4" class="screen hidden">
+    <div class="card q-card">
+      <div class="q-meta">
+        <span class="q-num">০৪</span>
+        <div class="q-track"><div class="q-track-fill" style="width:100%"></div></div>
+        <span class="q-of">/ ০৪</span>
+      </div>
+      <div class="star-deco">✦ ✧ ✦</div>
+      <h2 class="cinzel q-text">আমার প্রিয় অভিনেত্রী কে?</h2>
+      <div class="opts opts-tall">
+        <button class="opt opt-actress" onclick="checkAnswer(4,'Hania Amir',true)">
+          <span class="opt-icon">💛</span>
+          <span class="opt-label">Hania Amir</span>
+          <span class="opt-sub">Pakistani Actress</span>
+        </button>
+        <button class="opt opt-actress" onclick="checkAnswer(4,'Dure Fishan',false)">
+          <span class="opt-icon">🌸</span>
+          <span class="opt-label">Dure Fishan</span>
+          <span class="opt-sub">Pakistani Actress</span>
+        </button>
+      </div>
+      <div class="fb hidden" id="fb-q4"></div>
+    </div>
+  </div>
+
+  <!-- ░░ WRONG SCREEN ░░ -->
+  <div id="screen-wrong" class="screen hidden">
+    <div class="card wrong-card">
+      <div class="wrong-burst">✗</div>
+      <h2 class="cinzel wrong-title">ভুল উত্তর!</h2>
+      <p class="body-text">তুমি আমাকে ঠিকমতো চেনো না মনে হচ্ছে 😤<br/>আবার চেষ্টা করো!</p>
+      <button class="btn-secondary" id="retry-btn">আবার চেষ্টা করি ↺</button>
+    </div>
+  </div>
+
+  <!-- ░░ OUTRO ░░ -->
+  <div id="screen-outro" class="screen hidden">
+    <div class="card outro-card">
+      <div class="confetti-row">🎉 ✨ 🎊 ✨ 🎉</div>
+      <div class="pill-badge pill-gold">অভিনন্দন! তুমি সফল!</div>
+      <h2 class="cinzel outro-title">ঈদ মোবারক 🌙</h2>
+      <div class="vid-frame">
+        <video id="outro-video" playsinline>
+          <source src="videos/outro.mp4" type="video/mp4"/>
+        </video>
+        <div class="vid-ph" id="ph-outro">
+          <span class="ph-icon">🎥</span>
+          <span class="ph-text">outro.mp4 goes here</span>
+          <span class="ph-hint">Your Eid wishes video</span>
+        </div>
+      </div>
+      <div class="salami-box">
+        <p class="salami-label">সালামি নিতে নিচের ফর্মটি পূরণ করো 👇</p>
+        <a href="https://forms.gle/zP8nuJRnAZ1TnXpK6" target="_blank" class="btn-salami">
+          <span>💸 সালামি ফর্ম পূরণ করো</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
