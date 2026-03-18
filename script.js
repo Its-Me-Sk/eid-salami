@@ -98,13 +98,20 @@ function showScreen(id){
 }
 
 /* ── VIDEO ── */
-function tryVideo(vidId,phId){
-  const v=document.getElementById(vidId), ph=document.getElementById(phId);
-  if(!v)return;
-  const src=v.querySelector('source')?.getAttribute('src')||'';
-  if(!src){ v.style.display='none'; if(ph)ph.style.display='flex'; return; }
-  v.addEventListener('canplay',()=>{ if(ph)ph.style.display='none'; v.style.display='block'; v.play().catch(()=>{}); });
-  v.addEventListener('error',()=>{ v.style.display='none'; if(ph)ph.style.display='flex'; });
+function tryVideo(vidId){
+  const v = document.getElementById(vidId);
+  if (!v) return;
+
+  // Autoplay requires muted first — then we unmute after user interacts
+  v.muted = true;
+  v.play().then(() => {
+    // After autoplay starts, unmute so they can hear it
+    // Small delay so browser doesn't block it
+    setTimeout(() => { v.muted = false; }, 300);
+  }).catch(() => {
+    // Autoplay blocked even muted — just show controls, user taps play
+    v.muted = false;
+  });
 }
 
 /* ── SHOW CHEAT SCREEN ── */
@@ -112,13 +119,11 @@ function showCheat(){
   document.querySelectorAll('.screen').forEach(s=>{ s.classList.remove('active'); s.classList.add('hidden'); });
   const cheat=document.getElementById('cheat-screen');
   if(cheat){ cheat.classList.remove('hidden'); cheat.classList.add('active'); }
-  setTimeout(()=>tryVideo('cheat-video','ph-cheat'),400);
+  setTimeout(()=>tryVideo('cheat-video'),400);
 }
 
-/* ── SHOW INTRO ── */
 function showIntro(){
-  tryVideo('intro-video','ph-intro');
-  // screen-intro is already active by default in HTML
+  tryVideo('intro-video');
 }
 
 /* ── IP CHECK via API ── */
@@ -179,7 +184,7 @@ function checkAnswer(qNum,chosen,isCorrect){
         markDoneIP();
         setCookie('eid_started','done',365);
         showScreen('screen-outro');
-        setTimeout(()=>tryVideo('outro-video','ph-outro'),400);
+        setTimeout(()=>tryVideo('outro-video'),400);
       }
     } else {
       showScreen('screen-wrong');
