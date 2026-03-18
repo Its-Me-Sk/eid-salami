@@ -144,9 +144,9 @@ body { cursor: none; }
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--radius);
-  padding: 36px 32px;
+  padding: 28px 28px;
   display: flex; flex-direction: column; align-items: center;
-  gap: 20px;
+  gap: 16px;
   backdrop-filter: blur(24px) saturate(1.4);
   -webkit-backdrop-filter: blur(24px) saturate(1.4);
   box-shadow:
@@ -154,7 +154,9 @@ body { cursor: none; }
     inset 0 1px 0 rgba(168,85,247,0.15),
     inset 0 -1px 0 rgba(0,0,0,0.3);
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 95vh;
 }
 
 /* card shimmer edge */
@@ -269,17 +271,22 @@ body { cursor: none; }
 
 /* ── VIDEO FRAME ── */
 .vid-frame {
-  width: 100%; max-width: 480px;
-  aspect-ratio: 16/9;
+  width: 100%; max-width: 340px;
+  aspect-ratio: 9/16;
   border-radius: var(--radius-sm);
   overflow: hidden;
   position: relative;
   border: 1px solid rgba(168,85,247,0.3);
   box-shadow: var(--shadow-purple), inset 0 0 40px rgba(168,85,247,0.05);
   background: #08010f;
+  margin: 0 auto;
 }
 .vid-frame video {
-  width:100%; height:100%; object-fit:cover; display:block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
   border-radius: inherit;
 }
 
