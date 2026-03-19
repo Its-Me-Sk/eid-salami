@@ -172,7 +172,12 @@
         <button class="btn btn-blue btn-full">🚀 Open Site</button>
       </a>
     </div>
-    <p class="hint">After resetting, open the site in a new tab. Your next visit counts as fresh.</p>
+    <div style="margin-top:12px;">
+      <button class="btn btn-red btn-full" onclick="resetAllIPs()" id="reset-all-btn">
+        🗑️ Reset ALL Visitor IPs
+      </button>
+    </div>
+    <p class="hint">⚠️ Reset All will wipe every visitor — they can all visit again as fresh users.</p>
   </div>
 
   <!-- VISITOR LIST -->
@@ -367,6 +372,31 @@
     }catch(e){
       toast('❌ Reset failed. Try again.');
       btn.disabled=false; btn.textContent='🔄 Reset My IP & Cookie';
+    }
+  }
+
+  // Reset ALL visitors
+  async function resetAllIPs(){
+    if(!confirm('Reset ALL visitor IPs? Everyone can visit again as fresh users. This cannot be undone!')) return;
+    const btn=document.getElementById('reset-all-btn');
+    btn.disabled=true; btn.textContent='Resetting all...';
+    try{
+      const r=await fetch(`/api/reset-all?pass=${encodeURIComponent(adminPass)}`,{method:'POST'});
+      const d=await r.json();
+      if(d.ok){
+        toast(`✅ Wiped ${d.deleted} visitor records!`);
+        btn.textContent=`✅ Deleted ${d.deleted} records!`;
+        allVisitors=[];
+        document.getElementById('s-total').textContent='0';
+        document.getElementById('s-passed').textContent='0';
+        document.getElementById('s-failed').textContent='0';
+        document.getElementById('s-rate').textContent='0%';
+        renderTable();
+        setTimeout(()=>{ btn.disabled=false; btn.textContent='🗑️ Reset ALL Visitor IPs'; },4000);
+      } else { throw new Error('failed'); }
+    }catch(e){
+      toast('❌ Reset all failed.');
+      btn.disabled=false; btn.textContent='🗑️ Reset ALL Visitor IPs';
     }
   }
 
