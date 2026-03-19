@@ -8,6 +8,7 @@ const redis = new Redis({
 module.exports = async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).end();
 
@@ -16,18 +17,33 @@ module.exports = async function handler(req, res) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const ip =
-    req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
-    req.headers["x-real-ip"] ||
-    req.socket?.remoteAddress ||
-    "unknown";
-
-  const key = `eid:visitor:${ip.replace(/[^a-zA-Z0-9:.]/g, "_")}`;
-
   try {
-    await redis.del(key);
-    return res.status(200).json({ ok: true });
+    // Parse body — Vercel may or may not auto-parse JSON
+    let body = req.body;
+    if (typeof body === "string") {
+      try { body = JSON.parse(body); } catch(e) { body = {}; }
+    }
+    body = body || {};
+
+    const { key } = body; // full Redis key to delete, e.g. "eid:visitor:1_2_3_4"
+
+    if (key) {
+      // Delete a specific visitor key
+      await redis.del(key);
+      return res.status(200).json({ ok: true, deleted: key });
+    } else {
+      // Delete caller's own IP
+      const ip =
+        req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+        req.headers["x-real-ip"] ||
+        req.socket?.remoteAddress ||
+        "unknown";
+      const myKey = `eid:visitor:${ip.replace(/[^a-zA-Z0-9:.]/g, "_")}`;
+      await redis.del(myKey);
+      return res.status(200).json({ ok: true, deleted: myKey });
+    }
   } catch (err) {
-    return res.status(500).json({ error: "Redis error" });
+    console.error(err);
+    return res.status(500).json({ error: err.message });
   }
 };

@@ -16,6 +16,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
+    // Scan all visitor keys
     let cursor = 0;
     let allKeys = [];
     do {
@@ -28,24 +29,49 @@ module.exports = async function handler(req, res) {
     } while (cursor !== 0);
 
     let passed = 0, failed = 0, inProgress = 0;
+    let visitors = [];
 
     if (allKeys.length > 0) {
       const values = await Promise.all(allKeys.map(k => redis.get(k)));
-      values.forEach(v => {
-        if (v === "done")        passed++;
-        else if (v === "failed") failed++;
-        else                     inProgress++;
+
+      allKeys.forEach((key, i) => {
+        const status = values[i] || "unknown";
+        if (status === "done")        passed++;
+        else if (status === "failed") failed++;
+        else                          inProgress++;
+
+        // Extract IP from key: "eid:visitor:1_2_3_4" → "1.2.3.4"
+        const rawIP = key.replace("eid:visitor:", "").replace(/_/g, ".");
+        visitors.push({
+          key,           // full key (used for targeted reset)
+          ip: maskIP(rawIP),
+          status,
+          statusLabel: status === "done" ? "✅ Passed" : status === "failed" ? "❌ Failed" : "👀 Browsing",
+        });
       });
     }
+
+    // Sort: passed first, then failed, then browsing
+    const order = { done: 0, failed: 1, started: 2, unknown: 3 };
+    visitors.sort((a, b) => (order[a.status] ?? 3) - (order[b.status] ?? 3));
 
     return res.status(200).json({
       totalVisitors: allKeys.length,
       passed,
       failed,
       inProgress,
+      visitors,
     });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Redis error: " + err.message });
   }
 };
+
+function maskIP(ip) {
+  const parts = ip.split(".");
+  if (parts.length === 4) {
+    return `${parts[0]}.${parts[1]}.xxx.xxx`;
+  }
+  return ip.substring(0, 10) + "...";
+}

@@ -7,452 +7,371 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg: #08010f;
-      --purple-mid: #3b0764;
-      --purple-hi: #6b21a8;
-      --purple-glow: #a855f7;
-      --purple-soft: #c084fc;
-      --purple-pale: #e9d5ff;
-      --gold: #f59e0b;
-      --gold-hi: #fbbf24;
-      --green: #10b981;
-      --red: #ef4444;
-      --blue: #3b82f6;
-      --card-bg: rgba(22,5,53,0.85);
-      --card-border: rgba(168,85,247,0.25);
-      --text: #f3e8ff;
-      --text-muted: rgba(233,213,255,0.5);
+      --bg:#08010f; --pm:#3b0764; --ph:#6b21a8; --pg:#a855f7;
+      --ps:#c084fc; --pp:#e9d5ff; --gold:#f59e0b; --goldh:#fbbf24;
+      --green:#10b981; --red:#ef4444; --blue:#3b82f6;
+      --cb:rgba(22,5,53,0.85); --cbr:rgba(168,85,247,0.25);
+      --tx:#f3e8ff; --txm:rgba(233,213,255,0.5);
     }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{min-height:100vh;background:radial-gradient(ellipse at top,#0f0320,#08010f);font-family:'DM Sans',sans-serif;color:var(--tx);padding:20px;}
+    .star{position:fixed;border-radius:50%;background:white;animation:tw var(--d,3s) ease-in-out infinite var(--dl,0s);}
+    @keyframes tw{0%,100%{opacity:.1}50%{opacity:.6}}
 
-    * { margin:0; padding:0; box-sizing:border-box; }
+    /* LOGIN */
+    #login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;}
+    .login-card{background:var(--cb);border:1px solid var(--cbr);border-radius:24px;padding:48px 40px;width:100%;max-width:420px;text-align:center;backdrop-filter:blur(20px);box-shadow:0 0 60px rgba(168,85,247,0.2);display:flex;flex-direction:column;align-items:center;gap:20px;}
+    .login-icon{font-size:3rem;}
+    .ltitle{font-family:'Cinzel Decorative',serif;font-size:1.4rem;color:var(--ps);}
+    .lsub{font-size:.85rem;color:var(--txm);}
+    .inp{width:100%;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.25);border-radius:12px;padding:14px 18px;color:var(--tx);font-family:'DM Sans',sans-serif;font-size:1rem;outline:none;transition:border-color .2s;text-align:center;letter-spacing:3px;}
+    .inp:focus{border-color:var(--pg);}
+    .inp::placeholder{letter-spacing:1px;color:var(--txm);}
+    .err{color:#fca5a5;font-size:.85rem;min-height:20px;}
 
-    body {
-      min-height: 100vh;
-      background: radial-gradient(ellipse at top, #0f0320 0%, #08010f 70%);
-      font-family: 'DM Sans', sans-serif;
-      color: var(--text);
-      padding: 20px;
-    }
+    /* BUTTONS */
+    .btn{padding:14px 24px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;border:none;border-radius:50px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px;}
+    .btn-full{width:100%;justify-content:center;}
+    .btn-purple{background:linear-gradient(135deg,var(--ph),var(--pg));color:#fff;box-shadow:0 0 24px rgba(168,85,247,.4);}
+    .btn-purple:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(168,85,247,.6);}
+    .btn-green{background:linear-gradient(135deg,#064e3b,var(--green));color:#fff;box-shadow:0 0 16px rgba(16,185,129,.3);}
+    .btn-green:hover{box-shadow:0 0 30px rgba(16,185,129,.5);}
+    .btn-blue{background:linear-gradient(135deg,#1e3a8a,var(--blue));color:#fff;}
+    .btn-red{background:linear-gradient(135deg,#7f1d1d,var(--red));color:#fff;box-shadow:0 0 12px rgba(239,68,68,.3);}
+    .btn-red:hover{box-shadow:0 0 24px rgba(239,68,68,.5);}
+    .btn-sm{padding:6px 14px;font-size:.75rem;}
+    .btn-ghost{background:transparent;border:1px solid rgba(168,85,247,.3);color:var(--txm);padding:7px 16px;font-size:.78rem;}
+    .btn-ghost:hover{border-color:var(--pg);color:var(--tx);}
+    .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
 
-    /* Stars */
-    .star { position:fixed; border-radius:50%; background:white; animation:twinkle var(--d,3s) ease-in-out infinite var(--dl,0s); }
-    @keyframes twinkle { 0%,100%{opacity:.1} 50%{opacity:.7} }
+    /* DASHBOARD */
+    #dashboard{display:none;max-width:960px;margin:0 auto;padding-bottom:60px;}
+    .dash-header{display:flex;align-items:center;justify-content:space-between;padding:24px 0 28px;flex-wrap:wrap;gap:12px;}
+    .dash-title{font-family:'Cinzel Decorative',serif;font-size:1.4rem;color:var(--ps);}
+    .dash-sub{font-size:.78rem;color:var(--txm);margin-top:4px;}
+    .hdr-actions{display:flex;gap:10px;align-items:center;}
 
-    /* Login */
-    #login-wrap {
-      min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .login-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 24px;
-      padding: 48px 40px;
-      width: 100%; max-width: 420px;
-      text-align: center;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 0 60px rgba(168,85,247,0.2);
-      display: flex; flex-direction:column; align-items:center; gap:20px;
-    }
-    .login-icon { font-size: 3rem; }
-    .login-title { font-family:'Cinzel Decorative',serif; font-size:1.4rem; color:var(--purple-soft); }
-    .login-sub { font-size:0.85rem; color:var(--text-muted); }
+    /* STAT CARDS */
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:22px;}
+    .stat-card{background:var(--cb);border:1px solid var(--cbr);border-radius:18px;padding:22px 18px;text-align:center;backdrop-filter:blur(16px);transition:transform .2s;position:relative;overflow:hidden;}
+    .stat-card:hover{transform:translateY(-3px);}
+    .stat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(168,85,247,.06),transparent);pointer-events:none;}
+    .stat-num{font-family:'Cinzel Decorative',serif;font-size:2.6rem;font-weight:700;line-height:1;margin-bottom:6px;}
+    .stat-label{font-size:.72rem;color:var(--txm);letter-spacing:1px;text-transform:uppercase;}
+    .stat-icon{font-size:1.4rem;margin-bottom:6px;}
+    .c-purple .stat-num{color:var(--ps);}
+    .c-green  .stat-num{color:var(--green);}
+    .c-red    .stat-num{color:var(--red);}
+    .c-gold   .stat-num{color:var(--gold);font-size:2rem;}
 
-    .inp {
-      width: 100%;
-      background: rgba(168,85,247,0.08);
-      border: 1px solid rgba(168,85,247,0.25);
-      border-radius: 12px;
-      padding: 14px 18px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.2s;
-      text-align: center;
-      letter-spacing: 3px;
-    }
-    .inp:focus { border-color: var(--purple-glow); }
-    .inp::placeholder { letter-spacing:1px; color:var(--text-muted); }
+    /* SECTION */
+    .section{background:var(--cb);border:1px solid var(--cbr);border-radius:20px;padding:26px;backdrop-filter:blur(16px);margin-bottom:18px;}
+    .sec-title{font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--ps);margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+    .sec-title-left{display:flex;align-items:center;gap:8px;}
+    .sec-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(168,85,247,.3),transparent);}
 
-    .btn {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, var(--purple-hi), var(--purple-glow));
-      color: #fff; font-family:'DM Sans',sans-serif;
-      font-size:0.95rem; font-weight:600;
-      border:none; border-radius:50px; cursor:pointer;
-      box-shadow: 0 0 30px rgba(168,85,247,0.4);
-      transition: all 0.2s;
-    }
-    .btn:hover { transform:translateY(-2px); box-shadow:0 0 50px rgba(168,85,247,0.6); }
-    .btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+    /* PREVIEW STEPS */
+    .preview-desc{font-size:.87rem;color:var(--txm);line-height:1.7;margin-bottom:18px;}
+    .steps{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+    .step{display:flex;align-items:flex-start;gap:12px;background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.15);border-radius:12px;padding:12px 16px;}
+    .step-n{background:var(--ph);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;margin-top:1px;}
+    .step-t{font-size:.84rem;line-height:1.6;color:var(--txm);}
+    .step-t strong{color:var(--tx);}
+    code{background:rgba(168,85,247,.15);padding:2px 6px;border-radius:4px;color:var(--ps);font-size:.8rem;}
+    .btn-row{display:flex;gap:12px;flex-wrap:wrap;}
+    .btn-row .btn{flex:1;min-width:150px;justify-content:center;}
+    .hint{font-size:.72rem;color:var(--txm);text-align:center;margin-top:12px;}
 
-    .btn-danger {
-      background: linear-gradient(135deg, #7f1d1d, #ef4444);
-      box-shadow: 0 0 20px rgba(239,68,68,0.3);
-    }
-    .btn-danger:hover { box-shadow: 0 0 40px rgba(239,68,68,0.5); }
+    /* VISITOR TABLE */
+    .tbl-wrap{overflow-x:auto;border-radius:14px;border:1px solid rgba(168,85,247,.15);}
+    table{width:100%;border-collapse:collapse;font-size:.85rem;}
+    thead tr{background:rgba(107,33,168,.25);}
+    th{padding:12px 16px;text-align:left;font-size:.72rem;letter-spacing:1px;text-transform:uppercase;color:var(--ps);font-weight:600;white-space:nowrap;}
+    tbody tr{border-top:1px solid rgba(168,85,247,.08);transition:background .15s;}
+    tbody tr:hover{background:rgba(168,85,247,.05);}
+    td{padding:12px 16px;color:var(--tx);vertical-align:middle;}
+    .td-ip{font-family:monospace;font-size:.82rem;color:var(--pp);}
+    .td-num{color:var(--txm);font-size:.8rem;}
 
-    .btn-green {
-      background: linear-gradient(135deg, #064e3b, #10b981);
-      box-shadow: 0 0 20px rgba(16,185,129,0.3);
-    }
-    .btn-green:hover { box-shadow: 0 0 40px rgba(16,185,129,0.5); }
+    /* STATUS BADGES */
+    .badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:50px;font-size:.75rem;font-weight:600;}
+    .badge-green{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.35);color:#6ee7b7;}
+    .badge-red  {background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.3); color:#fca5a5;}
+    .badge-gray {background:rgba(168,85,247,.1); border:1px solid rgba(168,85,247,.2);color:var(--ps);}
 
-    .btn-blue {
-      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-      box-shadow: 0 0 20px rgba(59,130,246,0.3);
-    }
+    /* SEARCH */
+    .tbl-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
+    .search-inp{flex:1;min-width:180px;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);border-radius:10px;padding:9px 14px;color:var(--tx);font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;}
+    .search-inp:focus{border-color:var(--pg);}
+    .filter-btn{padding:8px 16px;font-size:.78rem;border-radius:50px;border:1px solid rgba(168,85,247,.25);background:transparent;color:var(--txm);cursor:pointer;transition:all .2s;}
+    .filter-btn.active,.filter-btn:hover{background:rgba(168,85,247,.15);border-color:var(--pg);color:var(--tx);}
+    .empty{text-align:center;padding:32px;color:var(--txm);font-size:.88rem;}
 
-    .err { color:#fca5a5; font-size:0.85rem; }
+    /* TOAST */
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(22,5,53,.97);border:1px solid rgba(168,85,247,.4);border-radius:50px;padding:12px 24px;font-size:.85rem;color:var(--pp);box-shadow:0 0 30px rgba(168,85,247,.3);transition:transform .35s cubic-bezier(.18,.89,.32,1.28);z-index:999;white-space:nowrap;}
+    .toast.show{transform:translateX(-50%) translateY(0);}
 
-    /* Dashboard */
-    #dashboard { display:none; max-width:900px; margin:0 auto; padding-bottom:40px; }
-
-    .dash-header {
-      display:flex; align-items:center; justify-content:space-between;
-      padding: 24px 0 32px;
-      flex-wrap: wrap; gap: 12px;
-    }
-    .dash-title { font-family:'Cinzel Decorative',serif; font-size:1.5rem; color:var(--purple-soft); }
-    .dash-sub { font-size:0.8rem; color:var(--text-muted); margin-top:4px; }
-
-    .logout-btn {
-      padding: 8px 20px;
-      background: transparent;
-      border: 1px solid rgba(168,85,247,0.3);
-      border-radius: 50px;
-      color: var(--text-muted);
-      font-size:0.8rem; cursor:pointer;
-      transition:all 0.2s;
-    }
-    .logout-btn:hover { border-color:var(--purple-glow); color:var(--text); }
-
-    /* Stat cards */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-    .stat-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 24px 20px;
-      text-align: center;
-      backdrop-filter: blur(16px);
-      position: relative; overflow:hidden;
-      transition: transform 0.2s;
-    }
-    .stat-card:hover { transform: translateY(-3px); }
-    .stat-card::before {
-      content:''; position:absolute; inset:0;
-      background: linear-gradient(135deg, rgba(168,85,247,0.06), transparent);
-      pointer-events:none;
-    }
-    .stat-num {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 2.8rem; font-weight:700;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-    .stat-label { font-size:0.78rem; color:var(--text-muted); letter-spacing:1px; text-transform:uppercase; }
-    .stat-icon  { font-size:1.5rem; margin-bottom:8px; }
-
-    .stat-total  .stat-num { color: var(--purple-soft); }
-    .stat-passed .stat-num { color: var(--green); }
-    .stat-failed .stat-num { color: var(--red); }
-    .stat-rate   .stat-num { color: var(--gold); font-size:2rem; }
-
-    /* Section card */
-    .section {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 28px;
-      backdrop-filter: blur(16px);
-      margin-bottom: 20px;
-    }
-    .section-title {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 0.9rem; color: var(--purple-soft);
-      margin-bottom: 20px;
-      display:flex; align-items:center; gap:10px;
-    }
-    .section-title::after {
-      content:''; flex:1; height:1px;
-      background: linear-gradient(90deg, rgba(168,85,247,0.3), transparent);
-    }
-
-    /* Preview section */
-    .preview-desc {
-      font-size:0.88rem; color:var(--text-muted); line-height:1.7;
-      margin-bottom:20px;
-    }
-    .preview-steps {
-      display:flex; flex-direction:column; gap:10px; margin-bottom:24px;
-    }
-    .step {
-      display:flex; align-items:flex-start; gap:12px;
-      background:rgba(168,85,247,0.06);
-      border:1px solid rgba(168,85,247,0.15);
-      border-radius:12px; padding:12px 16px;
-    }
-    .step-num {
-      background:var(--purple-hi); color:#fff;
-      width:22px; height:22px; border-radius:50%;
-      display:flex;align-items:center;justify-content:center;
-      font-size:0.7rem; font-weight:700; flex-shrink:0; margin-top:1px;
-    }
-    .step-text { font-size:0.85rem; line-height:1.6; color:var(--text-muted); }
-    .step-text strong { color:var(--text); }
-
-    .btn-row { display:flex; gap:12px; flex-wrap:wrap; }
-    .btn-row .btn { width:auto; padding:12px 24px; flex:1; min-width:160px; }
-
-    /* Toast */
-    .toast {
-      position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(80px);
-      background:rgba(22,5,53,0.95); border:1px solid rgba(168,85,247,0.4);
-      border-radius:50px; padding:12px 24px;
-      font-size:0.88rem; color:var(--purple-pale);
-      box-shadow:0 0 30px rgba(168,85,247,0.3);
-      transition:transform 0.35s cubic-bezier(.18,.89,.32,1.28);
-      z-index:999; white-space:nowrap;
-    }
-    .toast.show { transform:translateX(-50%) translateY(0); }
-
-    /* Refresh btn */
-    .refresh-btn {
-      padding:6px 14px; font-size:0.75rem;
-      background:rgba(168,85,247,0.1);
-      border:1px solid rgba(168,85,247,0.25);
-      border-radius:50px; color:var(--purple-soft);
-      cursor:pointer; transition:all 0.2s;
-    }
-    .refresh-btn:hover { background:rgba(168,85,247,0.2); }
-
-    .loading { color:var(--text-muted); font-size:0.88rem; text-align:center; padding:20px; }
-
-    @media(max-width:500px){
-      .login-card { padding:32px 20px; }
-      .section { padding:20px 16px; }
-      .stats-grid { grid-template-columns:1fr 1fr; }
+    @media(max-width:540px){
+      .login-card{padding:32px 18px;}
+      .section{padding:18px 14px;}
+      .stats-grid{grid-template-columns:1fr 1fr;}
+      th,td{padding:10px 10px;}
     }
   </style>
 </head>
 <body>
 
-  <!-- Login -->
-  <div id="login-wrap">
-    <div class="login-card">
-      <div class="login-icon">🔐</div>
-      <h1 class="login-title">Admin Panel</h1>
-      <p class="login-sub">Enter your admin password to continue</p>
-      <input class="inp" type="password" id="pass-input" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/>
-      <button class="btn" onclick="doLogin()" id="login-btn">Enter</button>
-      <span class="err" id="login-err"></span>
+<!-- Stars -->
+<div id="stars"></div>
+
+<!-- LOGIN -->
+<div id="login-wrap">
+  <div class="login-card">
+    <div class="login-icon">🔐</div>
+    <h1 class="ltitle">Admin Panel</h1>
+    <p class="lsub">Enter your admin password</p>
+    <input class="inp" type="password" id="pass-inp" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="btn btn-purple btn-full" onclick="doLogin()" id="login-btn">Enter</button>
+    <span class="err" id="login-err"></span>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="dash-header">
+    <div>
+      <div class="dash-title">🌙 Eid Salami Admin</div>
+      <div class="dash-sub">Live stats • auto-refreshes every 30s</div>
+    </div>
+    <div class="hdr-actions">
+      <button class="btn btn-ghost btn-sm" onclick="loadStats()">↻ Refresh</button>
+      <button class="btn btn-ghost btn-sm" onclick="logout()">Logout</button>
     </div>
   </div>
 
-  <!-- Dashboard -->
-  <div id="dashboard">
-    <div class="dash-header">
-      <div>
-        <div class="dash-title">🌙 Eid Salami Admin</div>
-        <div class="dash-sub">Live stats for your Eid Salami Challenge</div>
-      </div>
-      <div style="display:flex;gap:10px;align-items:center;">
-        <button class="refresh-btn" onclick="loadStats()">↻ Refresh</button>
-        <button class="logout-btn" onclick="logout()">Logout</button>
-      </div>
-    </div>
-
-    <!-- Stat Cards -->
-    <div class="stats-grid">
-      <div class="stat-card stat-total">
-        <div class="stat-icon">👥</div>
-        <div class="stat-num" id="s-total">—</div>
-        <div class="stat-label">Total Visitors</div>
-      </div>
-      <div class="stat-card stat-passed">
-        <div class="stat-icon">✅</div>
-        <div class="stat-num" id="s-passed">—</div>
-        <div class="stat-label">Answered All ✓</div>
-      </div>
-      <div class="stat-card stat-failed">
-        <div class="stat-icon">❌</div>
-        <div class="stat-num" id="s-failed">—</div>
-        <div class="stat-label">Couldn't Answer</div>
-      </div>
-      <div class="stat-card stat-rate">
-        <div class="stat-icon">📊</div>
-        <div class="stat-num" id="s-rate">—</div>
-        <div class="stat-label">Pass Rate</div>
-      </div>
-    </div>
-
-    <!-- Preview Section -->
-    <div class="section">
-      <div class="section-title">👁️ Preview Site as Fresh Visitor</div>
-      <p class="preview-desc">
-        Since your IP is tracked, you'll always see the cheat screen when you visit your own site.
-        Use the steps below to preview it like a first-time visitor.
-      </p>
-      <div class="preview-steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-text"><strong>Reset your IP</strong> — click the button below. This removes your IP from the database so the site won't recognize you.</div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-text"><strong>Clear your cookie</strong> — in your browser, press <strong>F12</strong> → Application → Cookies → delete <code>eid_started</code>. Or just open an incognito window after resetting.</div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-text"><strong>Open your site</strong> — you'll see it exactly as your juniors do. Fresh, first visit experience!</div>
-        </div>
-      </div>
-      <div class="btn-row">
-        <button class="btn btn-green" onclick="resetMyIP()" id="reset-btn">🔄 Reset My IP & Cookie</button>
-        <a href="/" target="_blank" style="flex:1;min-width:160px;">
-          <button class="btn btn-blue" style="width:100%">🚀 Open Site</button>
-        </a>
-      </div>
-      <p style="font-size:0.75rem;color:var(--text-muted);margin-top:14px;text-align:center;">
-        After resetting, open the site in a new tab. Your next visit will count as a fresh visitor.
-      </p>
-    </div>
-
-    <!-- Stats detail -->
-    <div class="section">
-      <div class="section-title">📈 Quick Summary</div>
-      <div id="summary-text" class="loading">Loading...</div>
-    </div>
+  <!-- STAT CARDS -->
+  <div class="stats-grid">
+    <div class="stat-card c-purple"><div class="stat-icon">👥</div><div class="stat-num" id="s-total">—</div><div class="stat-label">Total Visitors</div></div>
+    <div class="stat-card c-green"> <div class="stat-icon">✅</div><div class="stat-num" id="s-passed">—</div><div class="stat-label">Answered All</div></div>
+    <div class="stat-card c-red">   <div class="stat-icon">❌</div><div class="stat-num" id="s-failed">—</div><div class="stat-label">Couldn't Answer</div></div>
+    <div class="stat-card c-gold">  <div class="stat-icon">📊</div><div class="stat-num" id="s-rate">—</div><div class="stat-label">Pass Rate</div></div>
   </div>
 
-  <!-- Toast -->
-  <div class="toast" id="toast"></div>
+  <!-- PREVIEW SECTION -->
+  <div class="section">
+    <div class="sec-title"><div class="sec-title-left">👁️ Preview Site as Fresh Visitor</div></div>
+    <p class="preview-desc">Since your IP is tracked, you always land on the cheat screen. Click <strong>Reset My IP</strong> then open the site in a new tab to see it fresh.</p>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-t"><strong>Reset your IP</strong> — click the button below to wipe your record from the database.</div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-t"><strong>Clear cookie</strong> — press <strong>F12</strong> → Application → Cookies → delete <code>eid_started</code>. Or use incognito.</div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-t"><strong>Open your site</strong> — fresh first-visit experience, exactly what your juniors see!</div></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-green" onclick="resetMyIP()" id="reset-btn">🔄 Reset My IP & Cookie</button>
+      <a href="/" target="_blank" style="flex:1;min-width:150px;display:block;">
+        <button class="btn btn-blue btn-full">🚀 Open Site</button>
+      </a>
+    </div>
+    <p class="hint">After resetting, open the site in a new tab. Your next visit counts as fresh.</p>
+  </div>
 
-  <script>
-    let adminPass = '';
+  <!-- VISITOR LIST -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left">👤 All Visitors <span id="visitor-count" style="color:var(--txm);font-size:.75rem;font-family:'DM Sans',sans-serif;font-weight:400;margin-left:6px;"></span></div>
+    </div>
+    <div class="tbl-toolbar">
+      <input class="search-inp" type="text" id="search-inp" placeholder="Search IP..." oninput="renderTable()"/>
+      <button class="filter-btn active" data-filter="all"    onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn"        data-filter="done"   onclick="setFilter('done',this)">✅ Passed</button>
+      <button class="filter-btn"        data-filter="failed" onclick="setFilter('failed',this)">❌ Failed</button>
+      <button class="filter-btn"        data-filter="started" onclick="setFilter('started',this)">👀 Browsing</button>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>IP Address</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="visitor-tbody">
+          <tr><td colspan="4" class="empty">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
-    // ── Stars ──
-    for(let i=0;i<60;i++){
-      const s=document.createElement('div'); s.className='star';
-      const sz=Math.random()*2+0.5;
-      s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;--dl:-${(Math.random()*5).toFixed(1)}s;`;
-      document.body.appendChild(s);
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  let adminPass = '';
+  let allVisitors = [];
+  let currentFilter = 'all';
+
+  // Stars
+  const sc = document.getElementById('stars');
+  for(let i=0;i<60;i++){
+    const s=document.createElement('div'); s.className='star';
+    const sz=Math.random()*2+.5;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;position:fixed;--d:${(Math.random()*4+2).toFixed(1)}s;--dl:-${(Math.random()*5).toFixed(1)}s;`;
+    sc.appendChild(s);
+  }
+
+  // Toast
+  function toast(msg, dur=3000){
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), dur);
+  }
+
+  // Login
+  function doLogin(){
+    const pw=document.getElementById('pass-inp').value.trim();
+    if(!pw){document.getElementById('login-err').textContent='Enter a password';return;}
+    adminPass=pw;
+    document.getElementById('login-btn').disabled=true;
+    document.getElementById('login-err').textContent='';
+    fetch(`/api/stats?pass=${encodeURIComponent(pw)}`)
+      .then(r=>{ if(r.status===401) throw new Error('Wrong password'); return r.json(); })
+      .then(data=>{
+        if(data.error) throw new Error(data.error);
+        document.getElementById('login-wrap').style.display='none';
+        document.getElementById('dashboard').style.display='block';
+        renderStats(data);
+      })
+      .catch(err=>{
+        document.getElementById('login-err').textContent = err.message==='Wrong password'?'❌ Wrong password':'❌ '+err.message;
+        document.getElementById('login-btn').disabled=false;
+        adminPass='';
+      });
+  }
+
+  function logout(){
+    adminPass='';
+    document.getElementById('pass-inp').value='';
+    document.getElementById('dashboard').style.display='none';
+    document.getElementById('login-wrap').style.display='flex';
+  }
+
+  // Load stats
+  function loadStats(){
+    fetch(`/api/stats?pass=${encodeURIComponent(adminPass)}`)
+      .then(r=>r.json())
+      .then(renderStats)
+      .catch(()=>toast('❌ Failed to load stats'));
+  }
+
+  function renderStats(data){
+    const total=data.totalVisitors||0, passed=data.passed||0, failed=data.failed||0;
+    const rate=total>0?Math.round((passed/total)*100):0;
+    document.getElementById('s-total').textContent=total;
+    document.getElementById('s-passed').textContent=passed;
+    document.getElementById('s-failed').textContent=failed;
+    document.getElementById('s-rate').textContent=rate+'%';
+    allVisitors=data.visitors||[];
+    renderTable();
+  }
+
+  // Filter
+  function setFilter(f, el){
+    currentFilter=f;
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    el.classList.add('active');
+    renderTable();
+  }
+
+  // Render visitor table
+  function renderTable(){
+    const search=document.getElementById('search-inp').value.toLowerCase();
+    let list=allVisitors.filter(v=>{
+      const matchFilter = currentFilter==='all' || v.status===currentFilter;
+      const matchSearch = !search || v.ip.toLowerCase().includes(search);
+      return matchFilter && matchSearch;
+    });
+
+    document.getElementById('visitor-count').textContent=`(${list.length})`;
+    const tbody=document.getElementById('visitor-tbody');
+
+    if(list.length===0){
+      tbody.innerHTML=`<tr><td colspan="4" class="empty">No visitors found</td></tr>`;
+      return;
     }
 
-    // ── Toast ──
-    function showToast(msg, dur=3000){
-      const t=document.getElementById('toast');
-      t.textContent=msg; t.classList.add('show');
-      setTimeout(()=>t.classList.remove('show'), dur);
+    tbody.innerHTML=list.map((v,i)=>`
+      <tr>
+        <td class="td-num">${i+1}</td>
+        <td class="td-ip">${v.ip}</td>
+        <td>${badgeHTML(v.status)}</td>
+        <td>
+          <button class="btn btn-red btn-sm" onclick="resetVisitor('${v.key}', this)">
+            🗑️ Reset
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function badgeHTML(status){
+    if(status==='done')    return `<span class="badge badge-green">✅ Passed</span>`;
+    if(status==='failed')  return `<span class="badge badge-red">❌ Failed</span>`;
+    return `<span class="badge badge-gray">👀 Browsing</span>`;
+  }
+
+  // Reset a specific visitor
+  async function resetVisitor(key, btn){
+    btn.disabled=true; btn.textContent='...';
+    try{
+      const r=await fetch(`/api/admin-reset?pass=${encodeURIComponent(adminPass)}`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({key})
+      });
+      const d=await r.json();
+      if(d.ok){
+        toast('✅ Visitor reset!');
+        // Remove from local list and re-render
+        allVisitors=allVisitors.filter(v=>v.key!==key);
+        const total=parseInt(document.getElementById('s-total').textContent)||0;
+        document.getElementById('s-total').textContent=Math.max(0,total-1);
+        renderTable();
+      } else { throw new Error('failed'); }
+    }catch(e){
+      toast('❌ Reset failed'); btn.disabled=false; btn.textContent='🗑️ Reset';
     }
+  }
 
-    // ── Login ──
-    function doLogin(){
-      const pw = document.getElementById('pass-input').value.trim();
-      if(!pw){ document.getElementById('login-err').textContent='Enter a password'; return; }
-      adminPass = pw;
-      document.getElementById('login-btn').disabled = true;
-      document.getElementById('login-err').textContent = '';
-
-      // Try fetching stats to verify password
-      fetch(`/api/stats?pass=${encodeURIComponent(pw)}`)
-        .then(r => {
-          if(r.status === 401) throw new Error('Wrong password');
-          return r.json();
-        })
-        .then(data => {
-          if(data.error) throw new Error(data.error);
-          document.getElementById('login-wrap').style.display = 'none';
-          document.getElementById('dashboard').style.display = 'block';
-          renderStats(data);
-        })
-        .catch(err => {
-          document.getElementById('login-err').textContent = err.message === 'Wrong password' ? '❌ Wrong password' : '❌ ' + err.message;
-          document.getElementById('login-btn').disabled = false;
-          adminPass = '';
-        });
+  // Reset own IP
+  async function resetMyIP(){
+    const btn=document.getElementById('reset-btn');
+    btn.disabled=true; btn.textContent='Resetting...';
+    try{
+      const r=await fetch(`/api/admin-reset?pass=${encodeURIComponent(adminPass)}`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({})
+      });
+      const d=await r.json();
+      if(d.ok){
+        // Clear cookie too
+        document.cookie='eid_started=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;';
+        toast('✅ Your IP & cookie cleared! Open site in new tab.');
+        btn.textContent='✅ Done!';
+        setTimeout(()=>{ btn.disabled=false; btn.textContent='🔄 Reset My IP & Cookie'; },4000);
+        loadStats();
+      } else { throw new Error('failed'); }
+    }catch(e){
+      toast('❌ Reset failed. Try again.');
+      btn.disabled=false; btn.textContent='🔄 Reset My IP & Cookie';
     }
+  }
 
-    function logout(){
-      adminPass = '';
-      document.getElementById('pass-input').value = '';
-      document.getElementById('dashboard').style.display = 'none';
-      document.getElementById('login-wrap').style.display = 'flex';
-    }
-
-    // ── Load Stats ──
-    function loadStats(){
-      fetch(`/api/stats?pass=${encodeURIComponent(adminPass)}`)
-        .then(r=>r.json())
-        .then(renderStats)
-        .catch(()=>showToast('Failed to load stats'));
-    }
-
-    function renderStats(data){
-      const total  = data.totalVisitors || 0;
-      const passed = data.passed || 0;
-      const failed = data.failed || 0;
-      const rate   = total > 0 ? Math.round((passed/total)*100) : 0;
-
-      document.getElementById('s-total').textContent  = total;
-      document.getElementById('s-passed').textContent = passed;
-      document.getElementById('s-failed').textContent = failed;
-      document.getElementById('s-rate').textContent   = rate + '%';
-
-      // Summary text
-      const summary = document.getElementById('summary-text');
-      if(total === 0){
-        summary.innerHTML = `<span style="color:var(--text-muted)">No visitors yet. Share your link! 🚀</span>`;
-      } else {
-        summary.innerHTML = `
-          <div style="display:flex;flex-direction:column;gap:10px;font-size:0.9rem;line-height:1.8;">
-            <div>👥 <strong>${total}</strong> people visited your Eid Salami challenge</div>
-            <div>✅ <strong>${passed}</strong> answered all questions correctly and got the salami form</div>
-            <div>❌ <strong>${failed}</strong> got stuck and saw the consolation video</div>
-            <div>📊 Pass rate: <strong style="color:var(--gold)">${rate}%</strong> of visitors answered everything right</div>
-            ${passed > 0 ? `<div style="margin-top:4px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:12px;">
-              🎉 <strong>${passed}</strong> junior${passed>1?'s':''} earned salami from you!
-            </div>` : ''}
-          </div>
-        `;
-      }
-    }
-
-    // ── Reset IP ──
-    async function resetMyIP(){
-      const btn = document.getElementById('reset-btn');
-      btn.disabled = true;
-      btn.textContent = 'Resetting...';
-
-      try {
-        const r = await fetch(`/api/admin-reset?pass=${encodeURIComponent(adminPass)}`, { method:'POST' });
-        const data = await r.json();
-        if(data.ok){
-          // Also clear the cookie
-          document.cookie = 'eid_started=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-          showToast('✅ Reset done! Open the site in a new tab to preview.');
-          btn.textContent = '✅ Reset Done!';
-          setTimeout(()=>{ btn.disabled=false; btn.textContent='🔄 Reset My IP & Cookie'; }, 4000);
-        } else {
-          throw new Error('Reset failed');
-        }
-      } catch(e){
-        showToast('❌ Reset failed. Try again.');
-        btn.disabled=false;
-        btn.textContent='🔄 Reset My IP & Cookie';
-      }
-    }
-
-    // Auto-refresh stats every 30 seconds
-    setInterval(()=>{ if(adminPass) loadStats(); }, 30000);
-  </script>
+  // Auto refresh every 30s
+  setInterval(()=>{ if(adminPass) loadStats(); }, 30000);
+</script>
 </body>
 </html>
