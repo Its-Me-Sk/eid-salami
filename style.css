@@ -491,3 +491,177 @@ body { cursor: none; }
   .screen { position:relative; min-height:100vh; }
   body { overflow-y:auto; }
 }
+
+/* ============================================================
+   NEW FEATURES: Timer, Confetti, Shake, Hack Screen
+   ============================================================ */
+
+/* ── TIMER RING ── */
+.timer-ring {
+  position: relative;
+  width: 38px; height: 38px;
+  flex-shrink: 0;
+}
+.timer-ring svg {
+  width: 38px; height: 38px;
+  transform: rotate(-90deg);
+}
+.timer-bg {
+  fill: none;
+  stroke: rgba(168,85,247,0.15);
+  stroke-width: 3;
+}
+.timer-arc {
+  fill: none;
+  stroke: var(--purple-glow);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 94.2;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear, stroke 0.3s;
+}
+.timer-arc.urgent { stroke: var(--red-bad); }
+.timer-num {
+  position: absolute;
+  inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; font-weight: 700;
+  color: var(--purple-pale);
+}
+.timer-num.urgent { color: #fca5a5; }
+
+/* ── SCREEN SHAKE ── */
+@keyframes hardShake {
+  0%,100% { transform: translateX(0) translateY(0) rotate(0); }
+  10%  { transform: translateX(-12px) translateY(-4px) rotate(-1deg); }
+  20%  { transform: translateX(12px)  translateY(4px)  rotate(1deg); }
+  30%  { transform: translateX(-10px) translateY(-6px) rotate(-1deg); }
+  40%  { transform: translateX(10px)  translateY(6px)  rotate(0.5deg); }
+  50%  { transform: translateX(-8px)  translateY(-2px); }
+  60%  { transform: translateX(8px)   translateY(2px); }
+  70%  { transform: translateX(-5px); }
+  80%  { transform: translateX(5px); }
+  90%  { transform: translateX(-3px); }
+}
+.shake { animation: hardShake 0.6s ease; }
+
+/* ── HACK SCREEN ── */
+.hack-overlay {
+  position: fixed; inset: 0;
+  background: #000;
+  z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+
+.hack-terminal {
+  width: 100%; max-width: 620px;
+  background: #0a0a0a;
+  border: 1px solid #00ff41;
+  border-radius: 8px;
+  box-shadow: 0 0 40px rgba(0,255,65,0.3), 0 0 100px rgba(0,255,65,0.1);
+  overflow: hidden;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.hack-topbar {
+  background: #111;
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid #1a1a1a;
+}
+.hack-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+}
+.hack-dot.red    { background: #ff5f57; }
+.hack-dot.yellow { background: #ffbd2e; }
+.hack-dot.green  { background: #28ca42; }
+.hack-title {
+  margin-left: 8px;
+  font-size: 0.75rem;
+  color: #00ff41;
+  letter-spacing: 2px;
+  font-family: 'Share Tech Mono', monospace;
+  animation: textFlicker 2s infinite;
+}
+
+.hack-body {
+  padding: 20px;
+  min-height: 280px;
+  max-height: 320px;
+  overflow-y: auto;
+  font-size: 0.82rem;
+  line-height: 1.9;
+  color: #00ff41;
+}
+.hack-body::-webkit-scrollbar { width: 4px; }
+.hack-body::-webkit-scrollbar-track { background: #0a0a0a; }
+.hack-body::-webkit-scrollbar-thumb { background: #00ff41; border-radius: 2px; }
+
+.hack-line { display: block; }
+.hack-line.red-txt  { color: #ff4444; }
+.hack-line.yellow-txt { color: #ffdd00; }
+.hack-line.white-txt  { color: #ffffff; }
+.hack-line.dim-txt    { color: #006620; }
+
+.hack-progress-wrap {
+  padding: 16px 20px 20px;
+  border-top: 1px solid #1a1a1a;
+}
+.hack-progress-label {
+  font-size: 0.75rem;
+  color: #00ff41;
+  font-family: 'Share Tech Mono', monospace;
+  margin-bottom: 8px;
+  animation: textFlicker 1.5s infinite;
+}
+.hack-progress-bar {
+  width: 100%; height: 6px;
+  background: #1a1a1a;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid #002a0d;
+}
+.hack-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #00ff41, #00cc33);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px #00ff41;
+}
+
+@keyframes textFlicker {
+  0%,100% { opacity: 1; }
+  92%  { opacity: 1; }
+  93%  { opacity: 0.3; }
+  94%  { opacity: 1; }
+  96%  { opacity: 0.5; }
+  97%  { opacity: 1; }
+}
+
+/* scanlines overlay on hack screen */
+.hack-overlay::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.15) 2px,
+    rgba(0,0,0,0.15) 4px
+  );
+  pointer-events: none;
+  z-index: 101;
+}
+
+/* cheat reveal card inside cheat screen */
+#cheat-screen {
+  flex-direction: column;
+}
+#cheat-reveal {
+  position: absolute;
+  z-index: 102;
+}
+#cheat-reveal.hidden { display: none; }
+#cheat-reveal.showing { display: flex; }

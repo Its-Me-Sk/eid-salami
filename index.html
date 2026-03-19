@@ -5,24 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Eid Salami 🌙</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Scheherazade+New:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
-  <!-- ░░ BACKGROUND LAYERS ░░ -->
+  <!-- ░░ BACKGROUND ░░ -->
   <div class="bg-stars" id="bgStars"></div>
   <canvas class="bg-canvas" id="bgCanvas"></canvas>
-  <div class="bg-geo"></div>
   <div class="bg-mosque"></div>
   <div class="aurora"></div>
 
-  <!-- ░░ CHEAT SCREEN ░░ -->
+  <!-- ░░ CONFETTI CANVAS ░░ -->
+  <canvas id="confetti-canvas" style="position:fixed;inset:0;pointer-events:none;z-index:999;"></canvas>
+
+  <!-- ░░ HACK SCREEN (shown on revisit) ░░ -->
   <div id="cheat-screen" class="screen hidden">
-    <div class="card cheat-card">
+    <div class="hack-overlay" id="hack-overlay">
+      <div class="hack-terminal" id="hack-terminal">
+        <div class="hack-topbar">
+          <span class="hack-dot red"></span>
+          <span class="hack-dot yellow"></span>
+          <span class="hack-dot green"></span>
+          <span class="hack-title">SYSTEM BREACH DETECTED</span>
+        </div>
+        <div class="hack-body" id="hack-body"></div>
+        <div class="hack-progress-wrap">
+          <div class="hack-progress-label" id="hack-prog-label">Initializing...</div>
+          <div class="hack-progress-bar"><div class="hack-progress-fill" id="hack-prog-fill"></div></div>
+        </div>
+      </div>
+    </div>
+    <!-- shown after hack animation -->
+    <div class="card cheat-card hidden" id="cheat-reveal">
       <div class="cheat-eye">👁️</div>
-      <h2 class="cinzel cheat-title">Caught You! 😈</h2>
-      <p class="cheat-sub">ভেবেছিলে পার পাবে?</p>
+      <h2 class="cinzel cheat-title">ধরা খাইছো! 😈</h2>
+      <p class="cheat-sub">ভেবেছিলে আমি বুঝবো না?</p>
       <div class="vid-frame">
         <video id="cheat-video" playsinline autoplay muted controls controlsList="nodownload nofullscreen" disablePictureInPicture>
           <source src="videos/cheat.mp4" type="video/mp4"/>
@@ -31,7 +49,7 @@
     </div>
   </div>
 
-  <!-- ░░ SCREEN: INTRO ░░ -->
+  <!-- ░░ INTRO ░░ -->
   <div id="screen-intro" class="screen active">
     <div class="card intro-card">
       <div class="pill-badge">🌙 ঈদ মোবারক 🌙</div>
@@ -54,20 +72,15 @@
     <div class="card q-card">
       <div class="q-meta">
         <span class="q-num">০১</span>
-        <div class="q-track">
-          <div class="q-track-fill" style="width:25%"></div>
-        </div>
+        <div class="q-track"><div class="q-track-fill" style="width:25%"></div></div>
         <span class="q-of">/ ০৪</span>
+        <div class="timer-ring"><svg viewBox="0 0 36 36"><circle class="timer-bg" cx="18" cy="18" r="15"/><circle class="timer-arc" id="arc-q1" cx="18" cy="18" r="15"/></svg><span class="timer-num" id="timer-q1">15</span></div>
       </div>
       <div class="star-deco">✦ ✧ ✦</div>
-      <h2 class="cinzel q-text">আমি কি সিঙ্গেল?</h2>
+      <h2 class="cinzel q-text" id="qt-1"></h2>
       <div class="opts">
-        <button class="opt" data-q="1" data-val="হ্যাঁ" data-correct="true" onclick="checkAnswer(1,'হ্যাঁ',true)">
-          <span class="opt-icon">💚</span><span class="opt-label">হ্যাঁ</span>
-        </button>
-        <button class="opt" data-q="1" data-val="না" data-correct="false" onclick="checkAnswer(1,'না',false)">
-          <span class="opt-icon">❤️</span><span class="opt-label">না</span>
-        </button>
+        <button class="opt" onclick="checkAnswer(1,'হ্যাঁ',true)"><span class="opt-icon">💚</span><span class="opt-label">হ্যাঁ</span></button>
+        <button class="opt" onclick="checkAnswer(1,'না',false)"><span class="opt-icon">❤️</span><span class="opt-label">না</span></button>
       </div>
       <div class="fb hidden" id="fb-q1"></div>
     </div>
@@ -80,16 +93,13 @@
         <span class="q-num">০২</span>
         <div class="q-track"><div class="q-track-fill" style="width:50%"></div></div>
         <span class="q-of">/ ০৪</span>
+        <div class="timer-ring"><svg viewBox="0 0 36 36"><circle class="timer-bg" cx="18" cy="18" r="15"/><circle class="timer-arc" id="arc-q2" cx="18" cy="18" r="15"/></svg><span class="timer-num" id="timer-q2">15</span></div>
       </div>
       <div class="star-deco">✧ ✦ ✧</div>
-      <h2 class="cinzel q-text">আমার কি কোনো এক্স আছে?</h2>
+      <h2 class="cinzel q-text" id="qt-2"></h2>
       <div class="opts">
-        <button class="opt" onclick="checkAnswer(2,'হ্যাঁ',true)">
-          <span class="opt-icon">💔</span><span class="opt-label">হ্যাঁ</span>
-        </button>
-        <button class="opt" onclick="checkAnswer(2,'না',false)">
-          <span class="opt-icon">🙅</span><span class="opt-label">না</span>
-        </button>
+        <button class="opt" onclick="checkAnswer(2,'হ্যাঁ',true)"><span class="opt-icon">💔</span><span class="opt-label">হ্যাঁ</span></button>
+        <button class="opt" onclick="checkAnswer(2,'না',false)"><span class="opt-icon">🙅</span><span class="opt-label">না</span></button>
       </div>
       <div class="fb hidden" id="fb-q2"></div>
     </div>
@@ -102,16 +112,13 @@
         <span class="q-num">০৩</span>
         <div class="q-track"><div class="q-track-fill" style="width:75%"></div></div>
         <span class="q-of">/ ০৪</span>
+        <div class="timer-ring"><svg viewBox="0 0 36 36"><circle class="timer-bg" cx="18" cy="18" r="15"/><circle class="timer-arc" id="arc-q3" cx="18" cy="18" r="15"/></svg><span class="timer-num" id="timer-q3">15</span></div>
       </div>
       <div class="star-deco">✦ ✧ ✦</div>
-      <h2 class="cinzel q-text">আমি কি নিজেকে নিয়ে গর্বিত?</h2>
+      <h2 class="cinzel q-text" id="qt-3"></h2>
       <div class="opts">
-        <button class="opt" onclick="checkAnswer(3,'হ্যাঁ',false)">
-          <span class="opt-icon">😎</span><span class="opt-label">হ্যাঁ</span>
-        </button>
-        <button class="opt" onclick="checkAnswer(3,'না',true)">
-          <span class="opt-icon">🥺</span><span class="opt-label">না</span>
-        </button>
+        <button class="opt" onclick="checkAnswer(3,'হ্যাঁ',false)"><span class="opt-icon">😎</span><span class="opt-label">হ্যাঁ</span></button>
+        <button class="opt" onclick="checkAnswer(3,'না',true)"><span class="opt-icon">🥺</span><span class="opt-label">না</span></button>
       </div>
       <div class="fb hidden" id="fb-q3"></div>
     </div>
@@ -124,26 +131,19 @@
         <span class="q-num">০৪</span>
         <div class="q-track"><div class="q-track-fill" style="width:100%"></div></div>
         <span class="q-of">/ ০৪</span>
+        <div class="timer-ring"><svg viewBox="0 0 36 36"><circle class="timer-bg" cx="18" cy="18" r="15"/><circle class="timer-arc" id="arc-q4" cx="18" cy="18" r="15"/></svg><span class="timer-num" id="timer-q4">15</span></div>
       </div>
       <div class="star-deco">✦ ✧ ✦</div>
-      <h2 class="cinzel q-text">আমার প্রিয় অভিনেত্রী কে?</h2>
+      <h2 class="cinzel q-text" id="qt-4"></h2>
       <div class="opts opts-tall">
-        <button class="opt opt-actress" onclick="checkAnswer(4,'Hania Amir',true)">
-          <span class="opt-icon">💛</span>
-          <span class="opt-label">Hania Amir</span>
-          <span class="opt-sub">Pakistani Actress</span>
-        </button>
-        <button class="opt opt-actress" onclick="checkAnswer(4,'Dure Fishan',false)">
-          <span class="opt-icon">🌸</span>
-          <span class="opt-label">Dure Fishan</span>
-          <span class="opt-sub">Pakistani Actress</span>
-        </button>
+        <button class="opt opt-actress" onclick="checkAnswer(4,'Hania Amir',true)"><span class="opt-icon">💛</span><span class="opt-label">Hania Amir</span><span class="opt-sub">Pakistani Actress</span></button>
+        <button class="opt opt-actress" onclick="checkAnswer(4,'Dure Fishan',false)"><span class="opt-icon">🌸</span><span class="opt-label">Dure Fishan</span><span class="opt-sub">Pakistani Actress</span></button>
       </div>
       <div class="fb hidden" id="fb-q4"></div>
     </div>
   </div>
 
-  <!-- ░░ WRONG SCREEN ░░ -->
+  <!-- ░░ WRONG ░░ -->
   <div id="screen-wrong" class="screen hidden">
     <div class="card wrong-card">
       <div class="pill-badge pill-red">ভুল উত্তর 😢</div>
