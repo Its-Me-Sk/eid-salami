@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel 🌙</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #08010f;
+      --purple-mid: #3b0764;
+      --purple-hi: #6b21a8;
+      --purple-glow: #a855f7;
+      --purple-soft: #c084fc;
+      --purple-pale: #e9d5ff;
+      --gold: #f59e0b;
+      --gold-hi: #fbbf24;
+      --green: #10b981;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --card-bg: rgba(22,5,53,0.85);
+      --card-border: rgba(168,85,247,0.25);
+      --text: #f3e8ff;
+      --text-muted: rgba(233,213,255,0.5);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at top, #0f0320 0%, #08010f 70%);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      padding: 20px;
+    }
+
+    /* Stars */
+    .star { position:fixed; border-radius:50%; background:white; animation:twinkle var(--d,3s) ease-in-out infinite var(--dl,0s); }
+    @keyframes twinkle { 0%,100%{opacity:.1} 50%{opacity:.7} }
+
+    /* Login */
+    #login-wrap {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .login-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 48px 40px;
+      width: 100%; max-width: 420px;
+      text-align: center;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 60px rgba(168,85,247,0.2);
+      display: flex; flex-direction:column; align-items:center; gap:20px;
+    }
+    .login-icon { font-size: 3rem; }
+    .login-title { font-family:'Cinzel Decorative',serif; font-size:1.4rem; color:var(--purple-soft); }
+    .login-sub { font-size:0.85rem; color:var(--text-muted); }
+
+    .inp {
+      width: 100%;
+      background: rgba(168,85,247,0.08);
+      border: 1px solid rgba(168,85,247,0.25);
+      border-radius: 12px;
+      padding: 14px 18px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+      text-align: center;
+      letter-spacing: 3px;
+    }
+    .inp:focus { border-color: var(--purple-glow); }
+    .inp::placeholder { letter-spacing:1px; color:var(--text-muted); }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--purple-hi), var(--purple-glow));
+      color: #fff; font-family:'DM Sans',sans-serif;
+      font-size:0.95rem; font-weight:600;
+      border:none; border-radius:50px; cursor:pointer;
+      box-shadow: 0 0 30px rgba(168,85,247,0.4);
+      transition: all 0.2s;
+    }
+    .btn:hover { transform:translateY(-2px); box-shadow:0 0 50px rgba(168,85,247,0.6); }
+    .btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #7f1d1d, #ef4444);
+      box-shadow: 0 0 20px rgba(239,68,68,0.3);
+    }
+    .btn-danger:hover { box-shadow: 0 0 40px rgba(239,68,68,0.5); }
+
+    .btn-green {
+      background: linear-gradient(135deg, #064e3b, #10b981);
+      box-shadow: 0 0 20px rgba(16,185,129,0.3);
+    }
+    .btn-green:hover { box-shadow: 0 0 40px rgba(16,185,129,0.5); }
+
+    .btn-blue {
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+      box-shadow: 0 0 20px rgba(59,130,246,0.3);
+    }
+
+    .err { color:#fca5a5; font-size:0.85rem; }
+
+    /* Dashboard */
+    #dashboard { display:none; max-width:900px; margin:0 auto; padding-bottom:40px; }
+
+    .dash-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 24px 0 32px;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .dash-title { font-family:'Cinzel Decorative',serif; font-size:1.5rem; color:var(--purple-soft); }
+    .dash-sub { font-size:0.8rem; color:var(--text-muted); margin-top:4px; }
+
+    .logout-btn {
+      padding: 8px 20px;
+      background: transparent;
+      border: 1px solid rgba(168,85,247,0.3);
+      border-radius: 50px;
+      color: var(--text-muted);
+      font-size:0.8rem; cursor:pointer;
+      transition:all 0.2s;
+    }
+    .logout-btn:hover { border-color:var(--purple-glow); color:var(--text); }
+
+    /* Stat cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 24px 20px;
+      text-align: center;
+      backdrop-filter: blur(16px);
+      position: relative; overflow:hidden;
+      transition: transform 0.2s;
+    }
+    .stat-card:hover { transform: translateY(-3px); }
+    .stat-card::before {
+      content:''; position:absolute; inset:0;
+      background: linear-gradient(135deg, rgba(168,85,247,0.06), transparent);
+      pointer-events:none;
+    }
+    .stat-num {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 2.8rem; font-weight:700;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-label { font-size:0.78rem; color:var(--text-muted); letter-spacing:1px; text-transform:uppercase; }
+    .stat-icon  { font-size:1.5rem; margin-bottom:8px; }
+
+    .stat-total  .stat-num { color: var(--purple-soft); }
+    .stat-passed .stat-num { color: var(--green); }
+    .stat-failed .stat-num { color: var(--red); }
+    .stat-rate   .stat-num { color: var(--gold); font-size:2rem; }
+
+    /* Section card */
+    .section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px;
+      backdrop-filter: blur(16px);
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.9rem; color: var(--purple-soft);
+      margin-bottom: 20px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .section-title::after {
+      content:''; flex:1; height:1px;
+      background: linear-gradient(90deg, rgba(168,85,247,0.3), transparent);
+    }
+
+    /* Preview section */
+    .preview-desc {
+      font-size:0.88rem; color:var(--text-muted); line-height:1.7;
+      margin-bottom:20px;
+    }
+    .preview-steps {
+      display:flex; flex-direction:column; gap:10px; margin-bottom:24px;
+    }
+    .step {
+      display:flex; align-items:flex-start; gap:12px;
+      background:rgba(168,85,247,0.06);
+      border:1px solid rgba(168,85,247,0.15);
+      border-radius:12px; padding:12px 16px;
+    }
+    .step-num {
+      background:var(--purple-hi); color:#fff;
+      width:22px; height:22px; border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:0.7rem; font-weight:700; flex-shrink:0; margin-top:1px;
+    }
+    .step-text { font-size:0.85rem; line-height:1.6; color:var(--text-muted); }
+    .step-text strong { color:var(--text); }
+
+    .btn-row { display:flex; gap:12px; flex-wrap:wrap; }
+    .btn-row .btn { width:auto; padding:12px 24px; flex:1; min-width:160px; }
+
+    /* Toast */
+    .toast {
+      position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(80px);
+      background:rgba(22,5,53,0.95); border:1px solid rgba(168,85,247,0.4);
+      border-radius:50px; padding:12px 24px;
+      font-size:0.88rem; color:var(--purple-pale);
+      box-shadow:0 0 30px rgba(168,85,247,0.3);
+      transition:transform 0.35s cubic-bezier(.18,.89,.32,1.28);
+      z-index:999; white-space:nowrap;
+    }
+    .toast.show { transform:translateX(-50%) translateY(0); }
+
+    /* Refresh btn */
+    .refresh-btn {
+      padding:6px 14px; font-size:0.75rem;
+      background:rgba(168,85,247,0.1);
+      border:1px solid rgba(168,85,247,0.25);
+      border-radius:50px; color:var(--purple-soft);
+      cursor:pointer; transition:all 0.2s;
+    }
+    .refresh-btn:hover { background:rgba(168,85,247,0.2); }
+
+    .loading { color:var(--text-muted); font-size:0.88rem; text-align:center; padding:20px; }
+
+    @media(max-width:500px){
+      .login-card { padding:32px 20px; }
+      .section { padding:20px 16px; }
+      .stats-grid { grid-template-columns:1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login -->
+  <div id="login-wrap">
+    <div class="login-card">
+      <div class="login-icon">🔐</div>
+      <h1 class="login-title">Admin Panel</h1>
+      <p class="login-sub">Enter your admin password to continue</p>
+      <input class="inp" type="password" id="pass-input" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/>
+      <button class="btn" onclick="doLogin()" id="login-btn">Enter</button>
+      <span class="err" id="login-err"></span>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard">
+    <div class="dash-header">
+      <div>
+        <div class="dash-title">🌙 Eid Salami Admin</div>
+        <div class="dash-sub">Live stats for your Eid Salami Challenge</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <button class="refresh-btn" onclick="loadStats()">↻ Refresh</button>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="stats-grid">
+      <div class="stat-card stat-total">
+        <div class="stat-icon">👥</div>
+        <div class="stat-num" id="s-total">—</div>
+        <div class="stat-label">Total Visitors</div>
+      </div>
+      <div class="stat-card stat-passed">
+        <div class="stat-icon">✅</div>
+        <div class="stat-num" id="s-passed">—</div>
+        <div class="stat-label">Answered All ✓</div>
+      </div>
+      <div class="stat-card stat-failed">
+        <div class="stat-icon">❌</div>
+        <div class="stat-num" id="s-failed">—</div>
+        <div class="stat-label">Couldn't Answer</div>
+      </div>
+      <div class="stat-card stat-rate">
+        <div class="stat-icon">📊</div>
+        <div class="stat-num" id="s-rate">—</div>
+        <div class="stat-label">Pass Rate</div>
+      </div>
+    </div>
+
+    <!-- Preview Section -->
+    <div class="section">
+      <div class="section-title">👁️ Preview Site as Fresh Visitor</div>
+      <p class="preview-desc">
+        Since your IP is tracked, you'll always see the cheat screen when you visit your own site.
+        Use the steps below to preview it like a first-time visitor.
+      </p>
+      <div class="preview-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Reset your IP</strong> — click the button below. This removes your IP from the database so the site won't recognize you.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Clear your cookie</strong> — in your browser, press <strong>F12</strong> → Application → Cookies → delete <code>eid_started</code>. Or just open an incognito window after resetting.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Open your site</strong> — you'll see it exactly as your juniors do. Fresh, first visit experience!</div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-green" onclick="resetMyIP()" id="reset-btn">🔄 Reset My IP & Cookie</button>
+        <a href="/" target="_blank" style="flex:1;min-width:160px;">
+          <button class="btn btn-blue" style="width:100%">🚀 Open Site</button>
+        </a>
+      </div>
+      <p style="font-size:0.75rem;color:var(--text-muted);margin-top:14px;text-align:center;">
+        After resetting, open the site in a new tab. Your next visit will count as a fresh visitor.
+      </p>
+    </div>
+
+    <!-- Stats detail -->
+    <div class="section">
+      <div class="section-title">📈 Quick Summary</div>
+      <div id="summary-text" class="loading">Loading...</div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    let adminPass = '';
+
+    // ── Stars ──
+    for(let i=0;i<60;i++){
+      const s=document.createElement('div'); s.className='star';
+      const sz=Math.random()*2+0.5;
+      s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;--dl:-${(Math.random()*5).toFixed(1)}s;`;
+      document.body.appendChild(s);
+    }
+
+    // ── Toast ──
+    function showToast(msg, dur=3000){
+      const t=document.getElementById('toast');
+      t.textContent=msg; t.classList.add('show');
+      setTimeout(()=>t.classList.remove('show'), dur);
+    }
+
+    // ── Login ──
+    function doLogin(){
+      const pw = document.getElementById('pass-input').value.trim();
+      if(!pw){ document.getElementById('login-err').textContent='Enter a password'; return; }
+      adminPass = pw;
+      document.getElementById('login-btn').disabled = true;
+      document.getElementById('login-err').textContent = '';
+
+      // Try fetching stats to verify password
+      fetch(`/api/stats?pass=${encodeURIComponent(pw)}`)
+        .then(r => {
+          if(r.status === 401) throw new Error('Wrong password');
+          return r.json();
+        })
+        .then(data => {
+          if(data.error) throw new Error(data.error);
+          document.getElementById('login-wrap').style.display = 'none';
+          document.getElementById('dashboard').style.display = 'block';
+          renderStats(data);
+        })
+        .catch(err => {
+          document.getElementById('login-err').textContent = err.message === 'Wrong password' ? '❌ Wrong password' : '❌ ' + err.message;
+          document.getElementById('login-btn').disabled = false;
+          adminPass = '';
+        });
+    }
+
+    function logout(){
+      adminPass = '';
+      document.getElementById('pass-input').value = '';
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('login-wrap').style.display = 'flex';
+    }
+
+    // ── Load Stats ──
+    function loadStats(){
+      fetch(`/api/stats?pass=${encodeURIComponent(adminPass)}`)
+        .then(r=>r.json())
+        .then(renderStats)
+        .catch(()=>showToast('Failed to load stats'));
+    }
+
+    function renderStats(data){
+      const total  = data.totalVisitors || 0;
+      const passed = data.passed || 0;
+      const failed = data.failed || 0;
+      const rate   = total > 0 ? Math.round((passed/total)*100) : 0;
+
+      document.getElementById('s-total').textContent  = total;
+      document.getElementById('s-passed').textContent = passed;
+      document.getElementById('s-failed').textContent = failed;
+      document.getElementById('s-rate').textContent   = rate + '%';
+
+      // Summary text
+      const summary = document.getElementById('summary-text');
+      if(total === 0){
+        summary.innerHTML = `<span style="color:var(--text-muted)">No visitors yet. Share your link! 🚀</span>`;
+      } else {
+        summary.innerHTML = `
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:0.9rem;line-height:1.8;">
+            <div>👥 <strong>${total}</strong> people visited your Eid Salami challenge</div>
+            <div>✅ <strong>${passed}</strong> answered all questions correctly and got the salami form</div>
+            <div>❌ <strong>${failed}</strong> got stuck and saw the consolation video</div>
+            <div>📊 Pass rate: <strong style="color:var(--gold)">${rate}%</strong> of visitors answered everything right</div>
+            ${passed > 0 ? `<div style="margin-top:4px;padding:12px 16px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:12px;">
+              🎉 <strong>${passed}</strong> junior${passed>1?'s':''} earned salami from you!
+            </div>` : ''}
+          </div>
+        `;
+      }
+    }
+
+    // ── Reset IP ──
+    async function resetMyIP(){
+      const btn = document.getElementById('reset-btn');
+      btn.disabled = true;
+      btn.textContent = 'Resetting...';
+
+      try {
+        const r = await fetch(`/api/admin-reset?pass=${encodeURIComponent(adminPass)}`, { method:'POST' });
+        const data = await r.json();
+        if(data.ok){
+          // Also clear the cookie
+          document.cookie = 'eid_started=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          showToast('✅ Reset done! Open the site in a new tab to preview.');
+          btn.textContent = '✅ Reset Done!';
+          setTimeout(()=>{ btn.disabled=false; btn.textContent='🔄 Reset My IP & Cookie'; }, 4000);
+        } else {
+          throw new Error('Reset failed');
+        }
+      } catch(e){
+        showToast('❌ Reset failed. Try again.');
+        btn.disabled=false;
+        btn.textContent='🔄 Reset My IP & Cookie';
+      }
+    }
+
+    // Auto-refresh stats every 30 seconds
+    setInterval(()=>{ if(adminPass) loadStats(); }, 30000);
+  </script>
+</body>
+</html>

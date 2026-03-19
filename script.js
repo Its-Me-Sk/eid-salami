@@ -187,6 +187,8 @@ function checkAnswer(qNum,chosen,isCorrect){
         setTimeout(()=>tryVideo('outro-video'),400);
       }
     } else {
+      // Mark as failed in database
+      fetch('/api/mark-failed', { method:'POST' }).catch(()=>{});
       showScreen('screen-wrong');
       setTimeout(()=>tryVideo('consolation-video'), 400);
     }
