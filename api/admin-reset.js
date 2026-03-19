@@ -1,0 +1,48 @@
+const { Redis } = require("@upstash/redis");
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
+
+async function handler(req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "POST") return res.status(405).end();
+
+  const { pass } = req.query;
+  if (pass !== process.env.ADMIN_PASSWORD) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  try {
+    let key = null;
+    if (req.body && typeof req.body === "object") {
+      key = req.body.key || null;
+    } else if (req.body && typeof req.body === "string") {
+      try { key = JSON.parse(req.body).key || null; } catch(e) {}
+    }
+
+    if (key) {
+      await redis.del(key);
+      return res.status(200).json({ ok: true, deleted: key });
+    } else {
+      const ip =
+        req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+        req.headers["x-real-ip"] ||
+        req.socket?.remoteAddress ||
+        "unknown";
+      const myKey = `eid:visitor:${ip.replace(/[^a-zA-Z0-9:.]/g, "_")}`;
+      await redis.del(myKey);
+      return res.status(200).json({ ok: true, deleted: myKey });
+    }
+  } catch (err) {
+    console.error("admin-reset error:", err);
+    return res.status(500).json({ error: err.message });
+  }
+}
+
+handler.config = { api: { bodyParser: true } };
+module.exports = handler;
