@@ -5,7 +5,7 @@ const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN,
 });
 
-module.exports = async function handler(req, res) {
+async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -18,21 +18,18 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    // Parse body — Vercel may or may not auto-parse JSON
-    let body = req.body;
-    if (typeof body === "string") {
-      try { body = JSON.parse(body); } catch(e) { body = {}; }
+    // Parse body safely — Vercel auto-parses JSON when Content-Type is set
+    let key = null;
+    if (req.body && typeof req.body === "object") {
+      key = req.body.key || null;
+    } else if (req.body && typeof req.body === "string") {
+      try { key = JSON.parse(req.body).key || null; } catch(e) {}
     }
-    body = body || {};
-
-    const { key } = body; // full Redis key to delete, e.g. "eid:visitor:1_2_3_4"
 
     if (key) {
-      // Delete a specific visitor key
       await redis.del(key);
       return res.status(200).json({ ok: true, deleted: key });
     } else {
-      // Delete caller's own IP
       const ip =
         req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
         req.headers["x-real-ip"] ||
@@ -43,7 +40,10 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ ok: true, deleted: myKey });
     }
   } catch (err) {
-    console.error(err);
+    console.error("admin-reset error:", err);
     return res.status(500).json({ error: err.message });
   }
-};
+}
+
+handler.config = { api: { bodyParser: true } };
+module.exports = handler;
