@@ -1,13 +1,11 @@
-// api/mark-failed.js — called when someone gets a wrong answer
-
-import { Redis } from "@upstash/redis";
+const { Redis } = require("@upstash/redis");
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
   token: process.env.UPSTASH_REDIS_REST_TOKEN,
 });
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   if (req.method === "OPTIONS") return res.status(200).end();
@@ -23,7 +21,6 @@ export default async function handler(req, res) {
 
   try {
     const existing = await redis.get(key);
-    // Only mark failed if they haven't already passed
     if (existing !== "done") {
       await redis.set(key, "failed", { ex: 60 * 60 * 24 * 365 });
     }
@@ -31,4 +28,4 @@ export default async function handler(req, res) {
   } catch (err) {
     return res.status(200).json({ ok: false });
   }
-}
+};

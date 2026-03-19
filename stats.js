@@ -1,11 +1,11 @@
-import { Redis } from "@upstash/redis";
+const { Redis } = require("@upstash/redis");
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
   token: process.env.UPSTASH_REDIS_REST_TOKEN,
 });
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   if (req.method === "OPTIONS") return res.status(200).end();
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     let allKeys = [];
     do {
       const [nextCursor, keys] = await redis.scan(cursor, {
-        match: "eid:uid:*",
+        match: "eid:visitor:*",
         count: 100,
       });
       cursor = parseInt(nextCursor);
@@ -32,9 +32,9 @@ export default async function handler(req, res) {
     if (allKeys.length > 0) {
       const values = await Promise.all(allKeys.map(k => redis.get(k)));
       values.forEach(v => {
-        if (v === "done")         passed++;
-        else if (v === "failed")  failed++;
-        else                      inProgress++;
+        if (v === "done")        passed++;
+        else if (v === "failed") failed++;
+        else                     inProgress++;
       });
     }
 
@@ -46,6 +46,6 @@ export default async function handler(req, res) {
     });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: "Redis error" });
+    return res.status(500).json({ error: "Redis error: " + err.message });
   }
-}
+};
